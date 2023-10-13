@@ -28,8 +28,6 @@ const useSidebarItems = (): SidebarItemConfig[] => {
     return parseSidebarItems(routes);
   }, [routes]);
 
-  console.log(sidebarItems);
-
   return sidebarItems;
 };
 
