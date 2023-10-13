@@ -1,7 +1,7 @@
 import React from 'react';
 import MUIIcon, { MUIIconProps } from './MUIIcon';
-import { CircleButton } from './styles';
 import { theme } from '../../styles/theme/theme';
+import { CircleButton } from './styles';
 
 interface MUICircleButtonProps extends MUIIconProps {
   onClick?: () => void;

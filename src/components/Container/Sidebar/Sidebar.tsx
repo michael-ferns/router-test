@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import useSidebarItems from '../../../hooks/useSidebarItems';
 import { closeSidebar } from '../../../redux/slices/uiSlice';
 import { RootState } from '../../../redux/store';
-import SidebarList from './SidebarList';
-// import SidebarList from './SidebarListTemp'
+// import SidebarList from './SidebarList';
+import SidebarList from './SidebarListTemp';
 import { SidebarContainer, SidebarMenu } from './styles';
 
 const Sidebar: React.FC = () => {
@@ -15,11 +15,13 @@ const Sidebar: React.FC = () => {
   const [renderSidebar, setRenderSidebar] = useState(sidebarOpen);
   const sidebarItems = useSidebarItems();
 
-  console.log(JSON.stringify(sidebarItems));
-
   useEffect(() => {
     console.log('sidebarItems changed', sidebarItems);
   }, [sidebarItems]);
+
+  useEffect(() => {
+    console.log('sidebarOpen changed', sidebarOpen);
+  }, [sidebarOpen]);
 
   useEffect(() => {
     let timer: number | null = null; // Change this line

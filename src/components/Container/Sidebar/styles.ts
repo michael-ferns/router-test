@@ -51,6 +51,7 @@ export const SidebarBackdrop = styled.div`
 
 export const SidebarMenu = styled.div<SidebarMenuProps>`
   position: relative;
+  display: flex;
   width: 300px;
   height: 100%;
   padding: 24px 12px;

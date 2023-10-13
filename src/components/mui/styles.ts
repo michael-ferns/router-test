@@ -13,5 +13,6 @@ export const CircleButton = styled.button`
 
   &:active {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    filter: brightness(90%); // darken by 10%
   }
 `;
