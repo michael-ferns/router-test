@@ -32,7 +32,6 @@ const SidebarList: React.FC<SidebarListProps> = ({ items }) => {
             {/* Placeholder for actual icons */}
             {item.sidebarLabel}
           </SidebarListLink>
-          {item.subroutes && <SidebarList items={item.subroutes} />}
         </SidebarListItem>
       ))}
     </SidebarListContainer>

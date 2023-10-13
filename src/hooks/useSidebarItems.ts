@@ -1,17 +1,23 @@
 import { useMemo } from 'react';
 import useRoutes from './useRoutes';
-import { RouteConfig, SidebarItemConfig } from '../routing/types';
+import { TopLevelRouteConfig, SidebarItemConfig } from '../routing/types';
 
 export const parseSidebarItems = (
-  routes: RouteConfig[],
+  routes: TopLevelRouteConfig[],
+  depth: number = 0,
 ): SidebarItemConfig[] => {
+  if (depth > 2) {
+    throw new Error(
+      'Subroutes cannot go deeper than two levels with a sidebarLabel.',
+    );
+  }
+
   return routes
     .filter((route) => route.sidebarLabel)
     .map((route) => ({
       path: route.path,
       sidebarLabel: route.sidebarLabel!,
-      iconName: route.iconName!,
-      subroutes: parseSidebarItems(route.routes || []),
+      subroutes: parseSidebarItems(route.routes || [], depth + 1),
     }));
 };
 
@@ -21,6 +27,8 @@ const useSidebarItems = (): SidebarItemConfig[] => {
   const sidebarItems = useMemo(() => {
     return parseSidebarItems(routes);
   }, [routes]);
+
+  console.log(sidebarItems);
 
   return sidebarItems;
 };

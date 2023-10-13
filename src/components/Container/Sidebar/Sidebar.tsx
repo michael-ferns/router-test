@@ -14,6 +14,8 @@ const Sidebar: React.FC = () => {
   const [renderSidebar, setRenderSidebar] = useState(sidebarOpen);
   const sidebarItems = useSidebarItems();
 
+  console.log(JSON.stringify(sidebarItems));
+
   useEffect(() => {
     console.log('sidebarItems changed', sidebarItems);
   }, [sidebarItems]);

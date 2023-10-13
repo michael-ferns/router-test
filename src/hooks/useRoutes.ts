@@ -4,25 +4,23 @@ import Dashboard from '../components/Dashboard/Dashboard';
 import DashboardList from '../components/Dashboard/DashboardList';
 import NotFound from '../components/NotFound/NotFound';
 import Profile from '../components/Profile/Profile';
-import { RouteConfig } from '../routing/types';
+import { TopLevelRouteConfig } from '../routing/types';
 
 const useRoutes = () => {
   const routes = useMemo(
-    (): RouteConfig[] =>
+    (): TopLevelRouteConfig[] =>
       [
         {
           path: '/dashboard',
           component: Dashboard,
           shouldRender: true,
+          sidebarLabel: 'Dashboard',
           routes: [
             {
-              path: 'list',
+              path: '/list',
               component: DashboardList,
-              shouldRender: true,
             },
           ],
-          sidebarLabel: 'Dashboard',
-          iconName: 'Person',
         },
         {
           path: '/about',

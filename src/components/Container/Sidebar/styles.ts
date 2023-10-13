@@ -69,9 +69,13 @@ export const SidebarListContainer = styled.ul`
 `;
 
 export const SidebarListItem = styled.li`
-  display: block;
   width: 100%;
   padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
 
   &:hover {
     background-color: #f7f7f7;
@@ -79,8 +83,10 @@ export const SidebarListItem = styled.li`
 `;
 
 export const SidebarListLink = styled(Link)`
-  display: block;
   width: 100%;
   text-decoration: none;
   color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 `;
