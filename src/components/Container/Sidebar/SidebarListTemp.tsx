@@ -1,46 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { css, keyframes } from '@emotion/react';
 import { SidebarItemConfig } from '../../../routing/types';
 import styled from '../../../styles/styled';
 
-const slideInFromRight = keyframes`
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-`;
-
-const slideOutToLeft = keyframes`
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-`;
-
-const slideOutToRight = keyframes`
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(100%);
-  }
-`;
-
-const slideInFromLeft = keyframes`
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-`;
-
-interface SidebarClickableItemConfig extends Omit<SidebarItemConfig, 'path'>{
+interface SidebarClickableItemConfig extends Omit<SidebarItemConfig, 'path'> {
   path?: string;
 }
 
@@ -55,7 +18,6 @@ interface SidebarListItemProps {
 
 interface SidebarListMenuProps {
   isActive: boolean;
-  hasInteracted: boolean;
 }
 
 const SidebarListContainer = styled.div`
@@ -75,20 +37,9 @@ const SidebarListMainMenu = styled.div<SidebarListMenuProps>`
   top: 0;
   left: 0;
   width: 100%;
-  transform: translateX(0);
-  animation: ${(props) => {
-    if (props.isActive && props.hasInteracted) {
-      return css`
-        ${slideOutToLeft} 0.3s forwards
-      `;
-    }
-    if (props.hasInteracted) {
-      return css`
-        ${slideInFromLeft} 0.3s forwards
-      `;
-    }
-    return 'none';
-  }};
+  transform: ${(props) =>
+    props.isActive ? 'translateX(0)' : 'translateX(-100%)'};
+  transition: transform 0.3s ease;
 `;
 
 const SidebarListSubMenu = styled.div<SidebarListMenuProps>`
@@ -96,20 +47,9 @@ const SidebarListSubMenu = styled.div<SidebarListMenuProps>`
   top: 0;
   right: 0;
   width: 100%;
-  transform: translateX(100%);
-  animation: ${(props) => {
-    if (props.isActive && props.hasInteracted) {
-      return css`
-        ${slideInFromRight} 0.3s forwards
-      `;
-    }
-    if (props.hasInteracted) {
-      return css`
-        ${slideOutToRight} 0.3s forwards
-      `;
-    }
-    return 'none';
-  }};
+  transform: ${(props) =>
+    props.isActive ? 'translateX(0)' : 'translateX(100%)'};
+  transition: transform 0.3s ease;
 `;
 
 const SidebarListItemContainer = styled.li`
@@ -118,11 +58,11 @@ const SidebarListItemContainer = styled.li`
 
 const StyledLink = styled(Link)`
   text-decoration: none;
-  color: #333; // or any color you prefer
+  color: #333;
   padding: 10px 20px;
   display: block;
   &:hover {
-    background-color: #f5f5f5; // or any hover color you prefer
+    background-color: #f5f5f5;
   }
 `;
 
@@ -137,7 +77,25 @@ const ClickableElement = styled.div`
 `;
 
 const SidebarListItem: React.FC<SidebarListItemProps> = ({ item, onClick }) => {
+  const location = useLocation();
+
   if (item.path) {
+    // If the current path is the same as the item path, render ClickableElement instead
+    if (
+      location.pathname.startsWith(item.path) &&
+      location.pathname !== item.path
+    ) {
+      console.log('this hits', item.path);
+
+      return (
+        <SidebarListItemContainer>
+          <ClickableElement onClick={onClick}>
+            {item.sidebarLabel}
+          </ClickableElement>
+        </SidebarListItemContainer>
+      );
+    }
+
     return (
       <SidebarListItemContainer>
         <StyledLink to={item.path} onClick={onClick}>
@@ -158,53 +116,47 @@ const SidebarListItem: React.FC<SidebarListItemProps> = ({ item, onClick }) => {
 
 const SidebarList: React.FC<SidebarListProps> = ({ items }) => {
   const location = useLocation();
-  const [hasInteracted, setHasInteracted] = useState(false);
   const [activeSubMenu, setActiveSubMenu] = useState<SidebarItemConfig | null>(
     null,
   );
 
   useEffect(() => {
-    const matchingItem = items.find((item) =>
-      location.pathname.startsWith(item.path),
+    const matchingSubroute = items.find(
+      (item) =>
+        item.subroutes &&
+        item.subroutes.some((subItem) =>
+          location.pathname.startsWith(subItem.path),
+        ),
     );
 
-    if (matchingItem) {
-      console.log('MATCH');
-      setActiveSubMenu(matchingItem);
+    if (matchingSubroute) {
+      setActiveSubMenu(matchingSubroute);
     }
   }, [items, location]);
 
+  const handleMainMenuClick = (item: SidebarItemConfig) => {
+    if (item.subroutes) {
+      setActiveSubMenu(item);
+    }
+  };
+
   return (
     <SidebarListContainer>
-      <SidebarListMainMenu
-        isActive={!!activeSubMenu}
-        hasInteracted={hasInteracted}
-      >
+      <SidebarListMainMenu isActive={!activeSubMenu}>
         <SidebarListMenu>
           {items.map((item, i) => (
             <SidebarListItem
               key={i}
               item={item}
-              onClick={() => {
-                if (item.subroutes) {
-                  setActiveSubMenu(item);
-                  setHasInteracted(true);
-                }
-              }}
+              onClick={() => handleMainMenuClick(item)}
             />
           ))}
         </SidebarListMenu>
       </SidebarListMainMenu>
-      <SidebarListSubMenu
-        isActive={!!activeSubMenu}
-        hasInteracted={hasInteracted}
-      >
+      <SidebarListSubMenu isActive={!!activeSubMenu}>
         <SidebarListItem
           item={{ sidebarLabel: 'Back' }}
-          onClick={() => {
-            setActiveSubMenu(null);
-            setHasInteracted(true);
-          }}
+          onClick={() => setActiveSubMenu(null)}
         />
         <SidebarListMenu>
           {activeSubMenu?.subroutes?.map((subItem, i) => (
