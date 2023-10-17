@@ -2,10 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 interface UiState {
   sidebarOpen: boolean;
+  showFooter: boolean;
 }
 
 const initialState: UiState = {
   sidebarOpen: false,
+  showFooter: true,
 };
 
 const uiSlice = createSlice({

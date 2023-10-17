@@ -1,22 +1,15 @@
-import React from 'react';
-import * as Icons from '@mui/icons-material';
+import * as icons from '@mui/icons-material';
 
-export type IconName = keyof typeof Icons;
+export type IconName = keyof typeof icons;
 
-export interface MUIIconProps {
+interface MUIIconProps {
   iconName: IconName;
-  iconStyle?: React.CSSProperties;
 }
 
-const MUIIcon: React.FC<MUIIconProps> = ({ iconName, iconStyle }) => {
-  const Icon = Icons[iconName];
+const MUIIcon: React.FC<MUIIconProps> = ({ iconName }) => {
+  const Icon = icons[iconName];
 
-  if (!Icon) {
-    console.warn(`Icon with key "${iconName}" not found in MUI icons library.`);
-    return null;
-  }
-
-  return <Icon style={iconStyle} />;
+  return <Icon />;
 };
 
 export default MUIIcon;

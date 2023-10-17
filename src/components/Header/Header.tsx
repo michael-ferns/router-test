@@ -1,8 +1,8 @@
-import React from 'react';
 import { useDispatch } from 'react-redux';
-import MUICircleButton from '../MUI/MUICircleButton';
+import { Typography } from '@mui/material';
+import MUICircleButton from '../MUI/MUICircleButton/MUICircleButton';
 import { toggleSidebar } from '../../redux/slices/uiSlice';
-import { HeaderContainer, HeaderSection } from './styles';
+import { HeaderContainer, HeaderSection } from './Header.styles';
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
@@ -11,9 +11,15 @@ const Header: React.FC = () => {
     <HeaderContainer>
       <HeaderSection>
         <MUICircleButton
-          iconName="Menu"
-          onClick={() => dispatch(toggleSidebar())}
+          iconName="Person"
+          handleClick={() => dispatch(toggleSidebar())}
         />
+        <Typography variant="h1" sx={{ fontSize: 32 }}>
+          Admin Portal
+        </Typography>
+      </HeaderSection>
+      <HeaderSection>
+        <Typography>TESTING SOMETHING</Typography>
       </HeaderSection>
     </HeaderContainer>
   );

@@ -2,20 +2,17 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from '@emotion/react';
+import { CssBaseline } from '@mui/material';
 import Router from './routing/Router';
-import { AuthProvider } from './auth/AuthContext';
-import { theme } from './styles/theme/theme';
-import GlobalStyles from './styles/GlobalStyles';
+import theme from './theme';
 import store from './redux/store';
 
 const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
-      <GlobalStyles />
+      <CssBaseline />
       <Provider store={store}>
-        <AuthProvider>
-          <Router />
-        </AuthProvider>
+        <Router />
       </Provider>
     </ThemeProvider>
   );
