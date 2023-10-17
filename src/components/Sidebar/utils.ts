@@ -1,33 +1,40 @@
 import { CustomRouteObject } from '../../routing/routes';
 import { SidebarConfigItem } from './Sidebar.types';
 
-export const filterSidebarItems = (
+export const generateSidebarItems = (
   routes: CustomRouteObject[],
+  parentPath: string = '',
+  depth: number = 1,
 ): SidebarConfigItem[] => {
-  const processRoutes = (routes: CustomRouteObject[]): SidebarConfigItem[] => {
-    const output: SidebarConfigItem[] = [];
+  if (depth > 2) {
+    throw new Error('Config items are nested more than a single level deep.');
+  }
 
-    for (const route of routes) {
-      if (route.path && route.sidebarLabel) {
-        const configItem: SidebarConfigItem = {
-          path: route.path,
-          sidebarLabel: route.sidebarLabel,
-        };
+  const output: SidebarConfigItem[] = [];
 
-        if (route.sidebarLeadIcon)
-          configItem.sidebarLeadIcon = route.sidebarLeadIcon;
+  for (const route of routes) {
+    if (route.path && route.sidebarLabel) {
+      const fullPath = parentPath ? `${parentPath}/${route.path}` : route.path;
 
-        const children = route.children ? processRoutes(route.children) : [];
-        if (children.length > 0) {
-          configItem.children = children;
-        }
+      const configItem: SidebarConfigItem = {
+        path: fullPath.startsWith('/') ? fullPath : `/${fullPath}`,
+        sidebarLabel: route.sidebarLabel,
+      };
 
-        output.push(configItem);
+      if (route.sidebarLeadIcon)
+        configItem.sidebarLeadIcon = route.sidebarLeadIcon;
+
+      // Process children and add to config item only if valid children exist
+      const children = route.children
+        ? generateSidebarItems(route.children, fullPath, depth + 1)
+        : [];
+      if (children.length > 0) {
+        configItem.children = children;
       }
+
+      output.push(configItem);
     }
+  }
 
-    return output;
-  };
-
-  return processRoutes(routes);
+  return output;
 };

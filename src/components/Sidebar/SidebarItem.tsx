@@ -1,8 +1,7 @@
-import { useDispatch } from 'react-redux';
 import MUIIcon from '../MUI/MUIIcon';
-import { closeSidebar } from '../../redux/slices/uiSlice';
 import {
-  SideBarItemContainer,
+  SidebarItemLinkContainer,
+  SidebarItemClickContainer,
   SidebarItemContent,
   SidebarItemLabel,
 } from './Sidebar.styles';
@@ -10,15 +9,17 @@ import { SidebarConfigItem } from './Sidebar.types';
 
 interface SidebarItemProps {
   item: SidebarConfigItem;
-  closeOnClick: boolean;
+  onClick?: () => void;
+  isActive?: boolean;
 }
 
 const SidebarItem: React.FC<SidebarItemProps> = ({
   item,
-  closeOnClick = true,
+  onClick,
+  isActive = false,
 }) => {
-  const dispatch = useDispatch();
   const { sidebarLabel, sidebarLeadIcon, sidebarTrailIcon } = item;
+
   const leadIcon =
     sidebarLeadIcon !== undefined ? (
       <MUIIcon iconName={sidebarLeadIcon} />
@@ -29,19 +30,27 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
     ) : null;
 
   const handleItemClick = () => {
-    if (closeOnClick) {
-      dispatch(closeSidebar());
+    if (onClick) {
+      onClick();
     }
   };
 
-  return (
-    <SideBarItemContainer to={item.path} onClick={handleItemClick}>
+  return item.path && !isActive ? (
+    <SidebarItemLinkContainer to={item.path} onClick={handleItemClick}>
       <SidebarItemContent>
         {leadIcon}
         <SidebarItemLabel>{sidebarLabel}</SidebarItemLabel>
       </SidebarItemContent>
       {trailIcon}
-    </SideBarItemContainer>
+    </SidebarItemLinkContainer>
+  ) : (
+    <SidebarItemClickContainer onClick={handleItemClick}>
+      <SidebarItemContent>
+        {leadIcon}
+        <SidebarItemLabel>{sidebarLabel}</SidebarItemLabel>
+      </SidebarItemContent>
+      {trailIcon}
+    </SidebarItemClickContainer>
   );
 };
 

@@ -1,6 +1,4 @@
-import { useSelector } from 'react-redux';
 import { Typography } from '@mui/material';
-import { RootState } from '../../redux/store';
 import {
   FooterContainer,
   FooterCopyrightText,
@@ -9,9 +7,7 @@ import {
 } from './Footer.styles';
 
 const Footer: React.FC = () => {
-  const showFooter = useSelector((state: RootState) => state.ui.showFooter);
-
-  return showFooter ? (
+  return (
     <FooterContainer>
       <FooterCopyrightText>
         © 2023 Heartland Payment Systems, LLC - a Global Payments company. All
@@ -23,7 +19,7 @@ const Footer: React.FC = () => {
         <StyledLink to="#">Privacy Policy</StyledLink>
       </FooterNavContainer>
     </FooterContainer>
-  ) : null;
+  );
 };
 
 export default Footer;

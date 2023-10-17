@@ -1,19 +1,16 @@
-import { useDispatch } from 'react-redux';
 import { Typography } from '@mui/material';
 import MUICircleButton from '../MUI/MUICircleButton/MUICircleButton';
-import { toggleSidebar } from '../../redux/slices/uiSlice';
 import { HeaderContainer, HeaderSection } from './Header.styles';
 
-const Header: React.FC = () => {
-  const dispatch = useDispatch();
+interface HeaderProps {
+  handleToggleSidebar: () => void;
+}
 
+const Header: React.FC<HeaderProps> = ({ handleToggleSidebar }) => {
   return (
     <HeaderContainer>
       <HeaderSection>
-        <MUICircleButton
-          iconName="Person"
-          handleClick={() => dispatch(toggleSidebar())}
-        />
+        <MUICircleButton iconName="Person" handleClick={handleToggleSidebar} />
         <Typography variant="h1" sx={{ fontSize: 32 }}>
           Admin Portal
         </Typography>

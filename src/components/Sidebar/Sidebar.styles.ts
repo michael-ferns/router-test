@@ -1,8 +1,29 @@
 import styled from '@emotion/styled';
+import { keyframes } from '@emotion/react';
 import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-export const SidebarBackdropContainer = styled('div')`
+type SidebarListProps = { isMainMenu?: boolean; isVisible: boolean };
+
+const slideIn = keyframes`
+  0% {
+    left: -300px;
+  }
+  100% {
+    left: 0;
+  }
+`;
+
+const slideOut = keyframes`
+  0% {
+    left: 0;
+  }
+  100% {
+    left: -300px;
+  }
+`;
+
+export const SidebarBackdrop = styled('div')`
   position: fixed;
   top: 0;
   left: 0;
@@ -10,19 +31,48 @@ export const SidebarBackdropContainer = styled('div')`
   height: 100%;
   background-color: rgba(18, 18, 39, 0.85);
   z-index: 10;
-  display: flex;
-  align-items: start;
-  justify-content: start;
 `;
 
-export const SidebarMenu = styled('div')`
-  padding: ${(props) => props.theme.custom.spacing.defaultGutter};
+export const SidebarMenu = styled('div')<{ animateOut: boolean }>`
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 300px;
   height: 100%;
-  background-color: white;
-  overflow-y: auto;
+  padding: 24px 12px;
+  background-color: #ffffff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  animation: ${(props) => (props.animateOut ? slideOut : slideIn)} 0.25s 1
+    forwards;
+`;
+
+export const SidebarMenuContent = styled('div')`
+  position: relative;
+  flex: 1;
+  overflow-x: hidden;
+`;
+
+export const SidebarList = styled('div')<SidebarListProps>`
+  width: 100%;
+  position: absolute; // Add this
+  top: 0; // Add this
+  left: 0; // Add this
+  ${(props) =>
+    props.isVisible
+      ? {
+          transform: props.isMainMenu ? 'translateX(0)' : 'translateX(0)',
+        }
+      : {
+          transform: props.isMainMenu
+            ? 'translateX(-100%)'
+            : 'translateX(100%)',
+        }}
+
+  transition: transform 0.25s ease-out;
+
+  & > *:not(:last-child) {
+    margin-bottom: 4px;
+  }
 `;
 
 export const SidebarDesktopMenu = styled('div')`
@@ -32,16 +82,6 @@ export const SidebarDesktopMenu = styled('div')`
   border-radius: 8px;
 `;
 
-export const SidebarList = styled('div')`
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-
-  & > *:not(:last-child) {
-    margin-bottom: 4px;
-  }
-`;
-
 export const SidebarDivider = styled('hr')`
   width: 100%;
   border: 0;
@@ -49,7 +89,7 @@ export const SidebarDivider = styled('hr')`
   margin: 8px 0; // adjust the margin to set the spacing above and below the divider
 `;
 
-export const SideBarItemContainer = styled(Link)`
+export const SidebarItemLinkContainer = styled(Link)`
   padding: 8px;
   display: flex;
   align-items: center;
@@ -57,6 +97,20 @@ export const SideBarItemContainer = styled(Link)`
   color: black;
   text-decoration: none;
   border-radius: 8px;
+  &:hover {
+    background-color: #f5f7f7;
+  }
+`;
+
+export const SidebarItemClickContainer = styled.div`
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: black;
+  text-decoration: none;
+  border-radius: 8px;
+  cursor: pointer;
   &:hover {
     background-color: #f5f7f7;
   }
